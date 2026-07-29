@@ -1,0 +1,69 @@
+<svg viewBox="0 0 1600 1000" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <radialGradient id="blobNaranja" cx="30%" cy="20%" r="60%">
+      <stop offset="0%" stop-color="#FF8C4A" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#FF8C4A" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="blobRojizo" cx="85%" cy="80%" r="55%">
+      <stop offset="0%" stop-color="#D8491F" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#D8491F" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="blobDurazno" cx="80%" cy="10%" r="45%">
+      <stop offset="0%" stop-color="#FFC98B" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#FFC98B" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="blobCrema" cx="10%" cy="85%" r="50%">
+      <stop offset="0%" stop-color="#FFE7CF" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#FFE7CF" stop-opacity="0"/>
+    </radialGradient>
+
+    <filter id="desenfoque" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="60"/>
+    </filter>
+
+    <filter id="grano">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" result="ruido"/>
+      <feColorMatrix in="ruido" type="matrix"
+        values="0 0 0 0 0.85
+                0 0 0 0 0.4
+                0 0 0 0 0.2
+                0 0 0 0.035 0"/>
+    </filter>
+
+    <pattern id="puntos" width="34" height="34" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="2" fill="#D8491F" opacity="0.10"/>
+    </pattern>
+  </defs>
+
+  <!-- Base -->
+  <rect width="1600" height="1000" fill="#FFF9F4"/>
+
+  <!-- Textura de puntos sutil -->
+  <rect width="1600" height="1000" fill="url(#puntos)"/>
+
+  <!-- Manchas difuminadas tipo "salsa" -->
+  <g filter="url(#desenfoque)">
+    <rect width="1600" height="1000" fill="url(#blobNaranja)"/>
+    <rect width="1600" height="1000" fill="url(#blobRojizo)"/>
+    <rect width="1600" height="1000" fill="url(#blobDurazno)"/>
+    <rect width="1600" height="1000" fill="url(#blobCrema)"/>
+  </g>
+
+  <!-- Anillos concéntricos tipo "plato", esquina inferior derecha -->
+  <g opacity="0.14" stroke="#D8491F" fill="none" stroke-width="2">
+    <circle cx="1420" cy="900" r="120"/>
+    <circle cx="1420" cy="900" r="190"/>
+    <circle cx="1420" cy="900" r="260"/>
+    <circle cx="1420" cy="900" r="330"/>
+  </g>
+
+  <!-- Anillos concéntricos tipo "plato", esquina superior izquierda -->
+  <g opacity="0.10" stroke="#FF6B35" fill="none" stroke-width="2">
+    <circle cx="120" cy="60" r="90"/>
+    <circle cx="120" cy="60" r="150"/>
+    <circle cx="120" cy="60" r="210"/>
+  </g>
+
+  <!-- Grano fino sobre todo, para sensación premium -->
+  <rect width="1600" height="1000" filter="url(#grano)"/>
+</svg>

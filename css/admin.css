@@ -1,0 +1,217 @@
+/* =========================================
+   PidaPues — Estilos: Administración
+   ========================================= */
+
+.etiqueta-panel {
+  font-family: var(--fuente-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--naranja-oscuro);
+  background: var(--naranja-suave);
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+}
+
+.nav-staff {
+  margin-left: auto;
+  display: flex;
+  gap: 1.2rem;
+}
+
+.nav-staff a {
+  color: var(--gris-texto);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.88rem;
+}
+
+.nav-staff a:hover { color: var(--naranja-oscuro); }
+
+.contenedor-admin {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem 1.6rem 5rem;
+}
+
+.contenedor-admin .titulo-seccion h1 {
+  font-family: var(--fuente-display);
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  font-weight: 800;
+}
+
+.contenedor-admin .titulo-seccion p {
+  color: var(--gris-texto);
+  margin-top: 0.2rem;
+  margin-bottom: 1.8rem;
+}
+
+/* Tarjetas resumen (RF008) */
+.tarjetas-resumen {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2.4rem;
+}
+
+.tarjeta-resumen {
+  background: var(--blanco);
+  border-radius: 18px;
+  box-shadow: var(--sombra-tarjeta);
+  padding: 1.2rem 1.3rem;
+}
+
+.tarjeta-resumen-etiqueta {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--gris-texto);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.tarjeta-resumen-valor {
+  font-family: var(--fuente-display);
+  font-weight: 800;
+  font-size: 1.7rem;
+  color: var(--carbon);
+  margin-top: 0.3rem;
+}
+
+.tarjeta-resumen-valor.acento { color: var(--naranja-oscuro); }
+
+/* Bloques de sección */
+.bloque { margin-bottom: 2.6rem; }
+
+.bloque h2 {
+  font-family: var(--fuente-display);
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.bloque-encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.bloque-encabezado h2 { margin-bottom: 0; }
+
+.btn-reiniciar {
+  border: 1.5px solid var(--borde);
+  background: var(--blanco);
+  color: var(--gris-texto);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-reiniciar:hover { border-color: #C0392B; color: #C0392B; }
+
+/* Mesas (RF011) */
+.grilla-mesas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 0.9rem;
+}
+
+.mesa {
+  background: var(--blanco);
+  border-radius: 16px;
+  box-shadow: var(--sombra-tarjeta);
+  padding: 1rem 0.6rem;
+  text-align: center;
+  border-top: 5px solid var(--borde);
+}
+
+.mesa[data-estado="libre"] { border-top-color: #3FA35E; }
+.mesa[data-estado="ocupada"] { border-top-color: var(--naranja-primario); }
+.mesa[data-estado="pago"] { border-top-color: #E8A33D; }
+
+.mesa-numero {
+  font-family: var(--fuente-display);
+  font-weight: 800;
+  font-size: 1.3rem;
+}
+
+.mesa-numero::before { content: "Mesa "; font-family: var(--fuente-texto); font-weight: 700; font-size: 0.7rem; display: block; color: var(--gris-texto); }
+
+.mesa-estado {
+  margin-top: 0.4rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.mesa[data-estado="libre"] .mesa-estado { color: #2E7D32; }
+.mesa[data-estado="ocupada"] .mesa-estado { color: var(--naranja-oscuro); }
+.mesa[data-estado="pago"] .mesa-estado { color: #B5790C; }
+
+/* Tablas */
+.tabla-envoltorio {
+  background: var(--blanco);
+  border-radius: 18px;
+  box-shadow: var(--sombra-tarjeta);
+  overflow-x: auto;
+}
+
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  min-width: 640px;
+}
+
+.tabla thead th {
+  text-align: left;
+  padding: 0.85rem 1rem;
+  background: var(--naranja-suave);
+  color: var(--naranja-oscuro);
+  font-weight: 800;
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.tabla tbody td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--borde);
+  vertical-align: top;
+}
+
+.tabla tbody tr:last-child td { border-bottom: none; }
+.tabla tbody tr:hover { background: var(--crema); }
+
+.celda-productos { max-width: 260px; }
+.celda-productos span { display: block; font-size: 0.8rem; }
+.celda-productos small { color: var(--gris-texto); }
+
+.pill-estado {
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.pill-estado.pendiente { background: #FDF1DD; color: #B5790C; }
+.pill-estado.en_preparacion { background: var(--naranja-suave); color: var(--naranja-oscuro); }
+.pill-estado.listo { background: #E7F6E4; color: #2E7D32; }
+.pill-estado.entregado { background: #F1E9E0; color: #8A7A6D; }
+
+.tabla-vacia {
+  text-align: center;
+  color: var(--gris-texto);
+  padding: 1.6rem;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 560px) {
+  .nav-staff { gap: 0.8rem; }
+  .etiqueta-panel { display: none; }
+}

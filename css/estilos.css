@@ -1,0 +1,279 @@
+/* =========================================
+   PidaPues — Estilos: Pantalla de bienvenida
+   ========================================= */
+
+:root {
+  /* Paleta */
+  --naranja-primario: #FF6B35;
+  --naranja-vivo: #FF8C4A;
+  --naranja-oscuro: #D8491F;
+  --naranja-suave: #FFEDE1;
+  --crema: #FFF9F4;
+  --blanco: #FFFFFF;
+  --carbon: #2B2118;
+  --gris-texto: #8A7A6D;
+
+  /* Tipografía */
+  --fuente-display: "Baloo 2", system-ui, sans-serif;
+  --fuente-texto: "Nunito Sans", system-ui, sans-serif;
+
+  /* Sombra de marca */
+  --sombra-suave: 0 10px 30px rgba(216, 73, 31, 0.18);
+  --sombra-fuerte: 0 16px 40px rgba(216, 73, 31, 0.32);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: var(--fuente-texto);
+  color: var(--carbon);
+  background-color: var(--crema);
+  background-image: url("../img/fondo.svg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  /* En móvil, "fixed" puede dar problemas de rendimiento/zoom */
+  body {
+    background-attachment: scroll;
+  }
+}
+
+/* ---------- Iconos flotantes decorativos ---------- */
+.decoracion {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.icono-flotante {
+  position: absolute;
+  font-size: 2.6rem;
+  opacity: 0.16;
+  filter: grayscale(15%);
+  animation: flotar 9s ease-in-out infinite;
+}
+
+.icono-1 { top: 12%; left: 8%;  animation-delay: 0s; }
+.icono-2 { top: 68%; left: 6%;  animation-delay: 1.2s; font-size: 3.2rem; }
+.icono-3 { top: 20%; left: 88%; animation-delay: 2.4s; }
+.icono-4 { top: 75%; left: 88%; animation-delay: 0.6s; font-size: 2.2rem; }
+.icono-5 { top: 45%; left: 92%; animation-delay: 1.8s; font-size: 2.4rem; }
+
+@keyframes flotar {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(-22px) rotate(6deg); }
+}
+
+@media (max-width: 600px) {
+  .icono-flotante { font-size: 1.8rem; }
+  .icono-2 { font-size: 2.2rem; }
+}
+
+/* ---------- Contenedor principal ---------- */
+.bienvenida {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem 1.5rem;
+}
+
+/* ---------- Insignia / logo ---------- */
+.insignia {
+  width: 128px;
+  height: 128px;
+  margin-bottom: 1.5rem;
+  animation: aparecer 0.7s ease-out;
+}
+
+.insignia-svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 8px 18px rgba(216, 73, 31, 0.35));
+}
+
+.insignia-anillo {
+  fill: none;
+  stroke: var(--naranja-suave);
+  stroke-width: 3;
+}
+
+.insignia-fondo {
+  fill: var(--naranja-primario);
+}
+
+.plato-sombra {
+  fill: rgba(0, 0, 0, 0.12);
+}
+
+.plato {
+  fill: var(--blanco);
+}
+
+.plato-interior {
+  fill: var(--naranja-suave);
+}
+
+.cubierto {
+  fill: var(--blanco);
+}
+
+.vapor {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.85);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  animation: subir 2.6s ease-in-out infinite;
+}
+
+.vapor-2 { animation-delay: 0.4s; }
+.vapor-3 { animation-delay: 0.8s; }
+
+@keyframes subir {
+  0%   { opacity: 0; transform: translateY(4px); }
+  30%  { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-6px); }
+}
+
+/* ---------- Texto ---------- */
+.eyebrow {
+  font-family: var(--fuente-texto);
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  color: var(--naranja-oscuro);
+  margin-bottom: 0.6rem;
+  animation: aparecer 0.7s ease-out 0.05s both;
+}
+
+.titulo {
+  font-family: var(--fuente-display);
+  font-weight: 800;
+  font-size: clamp(2.6rem, 8vw, 4.4rem);
+  color: var(--carbon);
+  line-height: 1;
+  animation: aparecer 0.7s ease-out 0.1s both;
+}
+
+.titulo-acento {
+  color: var(--naranja-primario);
+}
+
+.lema {
+  margin-top: 1rem;
+  font-style: italic;
+  font-weight: 600;
+  font-size: clamp(1rem, 2.6vw, 1.25rem);
+  color: var(--gris-texto);
+  max-width: 30ch;
+  animation: aparecer 0.7s ease-out 0.18s both;
+}
+
+/* ---------- Botón principal ---------- */
+.btn-ingresar {
+  margin-top: 2.6rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--fuente-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--blanco);
+  background: linear-gradient(135deg, var(--naranja-vivo), var(--naranja-primario));
+  border: none;
+  padding: 1rem 2.2rem;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: var(--sombra-suave);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+  animation: aparecer 0.7s ease-out 0.26s both, latido 2.8s ease-in-out 1.5s infinite;
+}
+
+.btn-ingresar:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: var(--sombra-fuerte);
+  filter: brightness(1.04);
+}
+
+.btn-ingresar:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.btn-ingresar:focus-visible {
+  outline: 3px solid var(--naranja-oscuro);
+  outline-offset: 3px;
+}
+
+.btn-flecha {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.25s ease;
+}
+
+.btn-ingresar:hover .btn-flecha {
+  transform: translateX(4px);
+}
+
+@keyframes latido {
+  0%, 92%, 100% { box-shadow: var(--sombra-suave); }
+  96%           { box-shadow: 0 10px 30px rgba(216, 73, 31, 0.42); }
+}
+
+/* ---------- Pie ---------- */
+.pie {
+  margin-top: 2.4rem;
+  font-size: 0.85rem;
+  color: var(--gris-texto);
+  animation: aparecer 0.7s ease-out 0.32s both;
+}
+
+/* ---------- Animación de entrada general ---------- */
+@keyframes aparecer {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- Transición de salida (JS añade esta clase) ---------- */
+body.saliendo .bienvenida {
+  animation: salir 0.45s ease forwards;
+}
+
+@keyframes salir {
+  to { opacity: 0; transform: translateY(-12px) scale(0.98); }
+}
+
+/* ---------- Respeto a "reducir movimiento" ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .icono-flotante,
+  .btn-ingresar,
+  .vapor,
+  .insignia,
+  .eyebrow,
+  .titulo,
+  .lema,
+  .pie {
+    animation: none !important;
+  }
+}

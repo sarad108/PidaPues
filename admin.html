@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Administración | PidaPues</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/menu.css" />
+  <link rel="stylesheet" href="css/admin.css" />
+</head>
+<body>
+
+  <!-- ===================== ENCABEZADO ===================== -->
+  <header class="encabezado">
+    <a href="index.html" class="marca">
+      <span class="marca-icono">🍽️</span>
+      <span class="marca-texto">Pida<b>Pues</b></span>
+    </a>
+    <span class="etiqueta-panel">📊 Administración</span>
+    <nav class="nav-staff">
+      <a href="menu.html">Cliente</a>
+      <a href="cocina.html">Cocina</a>
+    </nav>
+  </header>
+
+  <div class="contenedor-admin">
+
+    <div class="titulo-seccion">
+      <h1>Panel administrativo</h1>
+      <p>Ventas, tiempos de servicio, mesas e historial de transacciones</p>
+    </div>
+
+    <!-- RF008: Reporte de ventas -->
+    <section class="tarjetas-resumen" id="tarjetasResumen" aria-label="Resumen de ventas del día"></section>
+
+    <!-- RF011: Estado de mesas -->
+    <section class="bloque">
+      <h2>Estado de las mesas</h2>
+      <div class="grilla-mesas" id="grillaMesas"></div>
+    </section>
+
+    <!-- RF010: Historial de pedidos y pagos -->
+    <section class="bloque">
+      <div class="bloque-encabezado">
+        <h2>Historial de pedidos y pagos</h2>
+        <button class="btn-reiniciar" id="btnReiniciarDemo">Reiniciar datos de demo</button>
+      </div>
+      <div class="tabla-envoltorio">
+        <table class="tabla" id="tablaHistorial">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Mesa</th>
+              <th>Productos</th>
+              <th>Total</th>
+              <th>Método de pago</th>
+              <th>Estado</th>
+              <th>Fecha y hora</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p class="tabla-vacia" id="historialVacio" hidden>Todavía no se han registrado pedidos.</p>
+    </section>
+
+    <!-- RF009: Tiempos de servicio -->
+    <section class="bloque">
+      <h2>Tiempos de servicio</h2>
+      <div class="tabla-envoltorio">
+        <table class="tabla" id="tablaTiempos">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Registro</th>
+              <th>Inicio preparación</th>
+              <th>Listo</th>
+              <th>Entregado</th>
+              <th>Duración total</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p class="tabla-vacia" id="tiemposVacio" hidden>Todavía no hay pedidos finalizados.</p>
+    </section>
+
+  </div>
+
+  <script src="js/datos.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

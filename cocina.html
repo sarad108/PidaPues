@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cocina | PidaPues</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/menu.css" />
+  <link rel="stylesheet" href="css/cocina.css" />
+</head>
+<body>
+
+  <!-- ===================== ENCABEZADO ===================== -->
+  <header class="encabezado">
+    <a href="index.html" class="marca">
+      <span class="marca-icono">🍽️</span>
+      <span class="marca-texto">Pida<b>Pues</b></span>
+    </a>
+    <span class="etiqueta-panel">👨‍🍳 Cocina</span>
+    <nav class="nav-staff">
+      <a href="menu.html">Cliente</a>
+      <a href="admin.html">Administración</a>
+    </nav>
+  </header>
+
+  <!-- ===================== TOAST DE NOTIFICACIÓN DE PAGO (RF007) ===================== -->
+  <div class="toast-contenedor" id="toastContenedor" aria-live="polite"></div>
+
+  <div class="contenedor-cocina">
+
+    <div class="titulo-seccion">
+      <h1>Pedidos</h1>
+      <p>Se actualizan automáticamente cuando el cliente confirma y paga un pedido</p>
+    </div>
+
+    <!-- Filtro por estado -->
+    <nav class="filtros-estado" id="filtrosEstado" aria-label="Filtrar por estado">
+      <button class="filtro-estado activo" data-estado="todos">Todos</button>
+      <button class="filtro-estado" data-estado="pendiente">🧾 Pendientes</button>
+      <button class="filtro-estado" data-estado="en_preparacion">👨‍🍳 En preparación</button>
+      <button class="filtro-estado" data-estado="listo">🔔 Listos</button>
+      <button class="filtro-estado" data-estado="entregado">🍽️ Entregados</button>
+    </nav>
+
+    <!-- Grilla de pedidos -->
+    <section class="grilla-pedidos" id="grillaPedidos" aria-live="polite"></section>
+
+    <!-- Estado vacío -->
+    <div class="estado-vacio" id="estadoVacioPedidos" hidden>
+      <span class="estado-vacio-icono">🍳</span>
+      <p>No hay pedidos en esta categoría todavía.</p>
+      <p class="estado-vacio-sub">Aparecerán aquí en cuanto un cliente confirme su pedido desde el menú.</p>
+    </div>
+
+  </div>
+
+  <script src="js/datos.js"></script>
+  <script src="js/cocina.js"></script>
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Menú | PidaPues</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/menu.css" />
+</head>
+<body>
+
+  <!-- ===================== ENCABEZADO ===================== -->
+  <header class="encabezado">
+    <a href="index.html" class="marca">
+      <span class="marca-icono">🍽️</span>
+      <span class="marca-texto">Pida<b>Pues</b></span>
+    </a>
+
+    <div class="buscador">
+      <svg viewBox="0 0 24 24" class="buscador-icono" aria-hidden="true">
+        <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" fill="none"/>
+        <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <input
+        type="text"
+        id="campoBuscar"
+        class="buscador-input"
+        placeholder="Buscar en el menú..."
+        autocomplete="off"
+      />
+    </div>
+
+    <button class="btn-carrito-movil" id="btnAbrirCarrito" aria-label="Abrir carrito">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M3 4H5L6.5 15.5A2 2 0 0 0 8.5 17H18A2 2 0 0 0 20 15.3L21.5 7H6"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <circle cx="9" cy="21" r="1.5" fill="currentColor"/>
+        <circle cx="18" cy="21" r="1.5" fill="currentColor"/>
+      </svg>
+      <span class="badge-carrito" id="badgeCarrito" hidden>0</span>
+    </button>
+  </header>
+
+  <!-- ===================== CONTENIDO PRINCIPAL ===================== -->
+  <div class="contenedor">
+
+    <main class="principal">
+
+      <div class="titulo-seccion">
+        <h1>Menú</h1>
+        <p>Escoge tus favoritos y arma tu pedido</p>
+      </div>
+
+      <!-- Categorías -->
+      <nav class="categorias" id="categorias" aria-label="Categorías del menú">
+        <button class="categoria activa" data-categoria="todos">Todos</button>
+        <button class="categoria" data-categoria="comida">🍔 Comidas</button>
+        <button class="categoria" data-categoria="bebida">🥤 Bebidas</button>
+        <button class="categoria" data-categoria="postre">🍰 Postres</button>
+      </nav>
+
+      <!-- Grilla de productos (se llena por JS) -->
+      <section class="grilla-productos" id="grillaProductos" aria-live="polite"></section>
+
+      <!-- Estado vacío para la búsqueda -->
+      <div class="estado-vacio" id="estadoVacio" hidden>
+        <span class="estado-vacio-icono">🔍</span>
+        <p>No encontramos nada con ese nombre.</p>
+        <p class="estado-vacio-sub">Prueba buscar "pizza", "gaseosa" o revisa otra categoría.</p>
+      </div>
+
+    </main>
+
+    <!-- ===================== CARRITO (barra lateral en escritorio) ===================== -->
+    <aside class="panel-carrito" id="panelCarrito">
+      <div class="carrito-encabezado">
+        <h2>🛒 Tu pedido</h2>
+        <button class="btn-cerrar-carrito" id="btnCerrarCarrito" aria-label="Cerrar carrito">✕</button>
+      </div>
+
+      <div class="carrito-lista" id="carritoLista">
+        <!-- Estado vacío por defecto -->
+        <div class="carrito-vacio" id="carritoVacio">
+          <span>🛒</span>
+          <p>Tu pedido está vacío</p>
+          <p class="carrito-vacio-sub">Agrega productos del menú para empezar</p>
+        </div>
+      </div>
+
+      <div class="carrito-resumen" id="carritoResumen" hidden>
+
+        <div class="campo-mesa">
+          <label for="campoMesa">Número de mesa</label>
+          <input type="number" id="campoMesa" min="1" max="8" placeholder="Ej: 4" inputmode="numeric" />
+        </div>
+
+        <div class="campo-pago">
+          <span class="campo-pago-etiqueta">Método de pago</span>
+          <div class="opciones-pago" id="opcionesPago" role="radiogroup" aria-label="Método de pago">
+            <button type="button" class="opcion-pago" data-pago="efectivo">💵<span>Efectivo</span></button>
+            <button type="button" class="opcion-pago" data-pago="tarjeta">💳<span>Tarjeta</span></button>
+            <button type="button" class="opcion-pago" data-pago="qr">📱<span>Código QR</span></button>
+          </div>
+        </div>
+
+        <p class="error-confirmar" id="errorConfirmar" hidden></p>
+
+        <div class="carrito-linea">
+          <span>Subtotal</span>
+          <span id="carritoSubtotal">$0</span>
+        </div>
+        <div class="carrito-linea carrito-total">
+          <span>Total</span>
+          <span id="carritoTotal">$0</span>
+        </div>
+        <button class="btn-confirmar" id="btnConfirmar">Confirmar y pagar pedido</button>
+      </div>
+
+      <!-- Confirmación de pedido + seguimiento en vivo (RF005) -->
+      <div class="carrito-confirmado" id="carritoConfirmado" hidden>
+        <span class="confirmado-icono">✅</span>
+        <h3>¡Pedido confirmado!</h3>
+        <p>Pedido <b id="numeroPedido">#0000</b> · Mesa <b id="mesaConfirmada">—</b></p>
+        <p class="confirmado-sub">Pago recibido. Cocina ya fue notificada.</p>
+
+        <ol class="seguimiento" id="seguimiento" aria-label="Estado del pedido">
+          <li class="seguimiento-paso" data-estado="pendiente">
+            <span class="seguimiento-icono">🧾</span>
+            <span class="seguimiento-texto">Pendiente</span>
+          </li>
+          <li class="seguimiento-paso" data-estado="en_preparacion">
+            <span class="seguimiento-icono">👨‍🍳</span>
+            <span class="seguimiento-texto">En preparación</span>
+          </li>
+          <li class="seguimiento-paso" data-estado="listo">
+            <span class="seguimiento-icono">🔔</span>
+            <span class="seguimiento-texto">Listo</span>
+          </li>
+          <li class="seguimiento-paso" data-estado="entregado">
+            <span class="seguimiento-icono">🍽️</span>
+            <span class="seguimiento-texto">Entregado</span>
+          </li>
+        </ol>
+
+        <button class="btn-nuevo-pedido" id="btnNuevoPedido">Hacer otro pedido</button>
+      </div>
+    </aside>
+
+    <!-- Fondo oscuro al abrir carrito en móvil -->
+    <div class="superposicion" id="superposicion"></div>
+
+  </div>
+
+  <!-- Botón flotante "Ver pedido" en móvil -->
+  <button class="fab-carrito" id="fabCarrito" hidden>
+    <span>Ver pedido</span>
+    <span class="fab-total" id="fabTotal">$0</span>
+  </button>
+
+  <!-- Acceso del personal (demo del prototipo) -->
+  <footer class="pie-staff">
+    <span>Acceso del personal:</span>
+    <a href="cocina.html">👨‍🍳 Cocina</a>
+    <span class="pie-staff-punto">·</span>
+    <a href="admin.html">📊 Administración</a>
+  </footer>
+
+  <script src="js/datos.js"></script>
+  <script src="js/menu.js"></script>
+</body>
+</html>
+

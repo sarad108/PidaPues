@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PidaPues | Pide rápido, fácil y sin errores</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/estilos.css" />
+</head>
+<body>
+
+  <!-- Capa decorativa: iconos flotantes de comida -->
+  <div class="decoracion" aria-hidden="true">
+    <span class="icono-flotante icono-1">🍕</span>
+    <span class="icono-flotante icono-2">🍔</span>
+    <span class="icono-flotante icono-3">🥤</span>
+    <span class="icono-flotante icono-4">🍟</span>
+    <span class="icono-flotante icono-5">🌭</span>
+  </div>
+
+  <main class="bienvenida">
+
+    <!-- Insignia / logo -->
+    <div class="insignia" id="insignia">
+      <svg class="insignia-svg" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Logo de PidaPues">
+        <circle cx="60" cy="60" r="58" class="insignia-anillo" />
+        <circle cx="60" cy="60" r="48" class="insignia-fondo" />
+        <!-- Plato -->
+        <ellipse cx="60" cy="66" rx="30" ry="10" class="plato-sombra" />
+        <ellipse cx="60" cy="62" rx="30" ry="9" class="plato" />
+        <ellipse cx="60" cy="62" rx="21" ry="6" class="plato-interior" />
+        <!-- Tenedor -->
+        <g class="cubierto">
+          <rect x="33" y="30" width="4" height="26" rx="2" />
+          <rect x="30" y="28" width="2.5" height="10" rx="1" />
+          <rect x="34.5" y="28" width="2.5" height="10" rx="1" />
+          <rect x="39" y="28" width="2.5" height="10" rx="1" />
+        </g>
+        <!-- Cuchillo -->
+        <g class="cubierto">
+          <path d="M84 28 C90 30 90 42 84 46 L84 56 L80 56 L80 28 Z" />
+        </g>
+        <!-- Vapor -->
+        <path class="vapor vapor-1" d="M52 26 C48 22 48 18 52 14" />
+        <path class="vapor vapor-2" d="M60 24 C56 20 56 16 60 12" />
+        <path class="vapor vapor-3" d="M68 26 C64 22 64 18 68 14" />
+      </svg>
+    </div>
+
+    <p class="eyebrow">Sistema de pedidos</p>
+
+    <h1 class="titulo">
+      Pida<span class="titulo-acento">Pues</span>
+    </h1>
+
+    <p class="lema">"Pide rápido, fácil y sin errores"</p>
+
+    <button class="btn-ingresar" id="btnIngresar">
+      <span>Ingresar al Menú</span>
+      <svg class="btn-flecha" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <p class="pie">Hecho con 🧡 para amantes de la buena comida</p>
+
+  </main>
+
+  <script src="js/bienvenida.js"></script>
+</body>
+</html>
