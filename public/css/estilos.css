@@ -42,6 +42,8 @@ body {
   background-repeat: no-repeat;
   background-attachment: fixed;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   overflow-x: hidden;
   position: relative;
 }
@@ -90,7 +92,7 @@ body {
 .bienvenida {
   position: relative;
   z-index: 1;
-  min-height: 100vh;
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -249,6 +251,65 @@ body {
   animation: aparecer 0.7s ease-out 0.32s both;
 }
 
+/* ---------- Vitrina del menú (ticker) ---------- */
+.ticker-menu {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding-top: 0.6rem;
+  animation: aparecer 0.7s ease-out 0.36s both;
+}
+
+.ticker-etiqueta {
+  text-align: center;
+  font-family: var(--fuente-display);
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--naranja-oscuro);
+  margin-bottom: 0.7rem;
+}
+
+.ticker-pista {
+  display: flex;
+  width: max-content;
+  gap: 0.7rem;
+  animation: desfilar 32s linear infinite;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.ticker-item {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--fuente-texto);
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--carbon);
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(216, 73, 31, 0.14);
+  padding: 0.55rem 1rem;
+  border-radius: 999px;
+  box-shadow: 0 6px 16px rgba(43, 33, 24, 0.06);
+  backdrop-filter: blur(6px);
+}
+
+@keyframes desfilar {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@media (max-width: 560px) {
+  .ticker-item { font-size: 0.78rem; padding: 0.5rem 0.85rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticker-pista { animation: none; overflow-x: auto; }
+}
+
 /* ---------- Animación de entrada general ---------- */
 @keyframes aparecer {
   from { opacity: 0; transform: translateY(14px); }
@@ -276,4 +337,32 @@ body.saliendo .bienvenida {
   .pie {
     animation: none !important;
   }
+}
+
+/* ---------- Acceso del personal (único punto de entrada) ---------- */
+.pie-staff {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1.2rem 1.6rem 1.8rem;
+  font-size: 0.8rem;
+  color: var(--gris-texto);
+  animation: aparecer 0.7s ease-out 0.4s both;
+}
+
+.pie-staff a {
+  color: var(--naranja-oscuro);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.pie-staff a:hover { text-decoration: underline; }
+
+.pie-staff-punto { color: rgba(43, 33, 24, 0.25); }
+
+@media (max-width: 560px) {
+  .pie-staff { flex-wrap: wrap; padding: 1rem 1rem 1.6rem; }
 }

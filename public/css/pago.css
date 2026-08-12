@@ -1,0 +1,675 @@
+/* =========================================
+   PidaPues — Estilos: Módulo de pago
+   Checkout de dos columnas, look moderno tipo pasarela
+   profesional (resumen fijo + tarjetas de paso con foco
+   en confianza y claridad).
+   ========================================= */
+
+:root {
+  --pago-exito: #1E8E5A;
+  --pago-exito-suave: #E7F6EE;
+  --pago-tinta: #0F172A;
+  --pago-tinta-suave: #1F2A44;
+  --pago-sombra-card: 0 1px 2px rgba(31, 22, 12, 0.04), 0 18px 40px -18px rgba(43, 33, 24, 0.22);
+  --pago-sombra-card-hover: 0 1px 2px rgba(31, 22, 12, 0.05), 0 22px 48px -16px rgba(216, 73, 31, 0.24);
+}
+
+/* ---------- Fondo general de la pantalla de pago ---------- */
+body.cuerpo-pago {
+  background:
+    radial-gradient(1100px 480px at 50% -12%, rgba(255, 140, 74, 0.16), transparent 60%),
+    radial-gradient(900px 500px at 100% 0%, rgba(255, 201, 139, 0.14), transparent 55%),
+    var(--crema);
+  min-height: 100vh;
+}
+
+.encabezado-pago {
+  box-shadow: 0 1px 0 rgba(43, 33, 24, 0.04);
+}
+
+.etiqueta-panel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.etiqueta-segura {
+  background: var(--pago-exito-suave);
+  color: var(--pago-exito);
+}
+
+.icono-candado { width: 14px; height: 14px; }
+
+/* ---------- Indicador de pasos ---------- */
+.pasos-pago {
+  list-style: none;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0;
+  max-width: 460px;
+  margin: 0 auto 2rem;
+  padding: 0;
+}
+
+.paso-pago {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--gris-texto);
+  text-align: center;
+}
+
+.paso-pago::before {
+  content: "";
+  position: absolute;
+  top: 15px;
+  left: -50%;
+  width: 100%;
+  height: 2px;
+  background: var(--borde);
+  z-index: 0;
+}
+
+.paso-pago:first-child::before { display: none; }
+
+.paso-num {
+  position: relative;
+  z-index: 1;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--blanco);
+  border: 2px solid var(--borde);
+  color: var(--gris-texto);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-family: var(--fuente-display);
+  transition: all 0.25s ease;
+}
+
+.paso-pago.activo { color: var(--naranja-oscuro); }
+.paso-pago.activo .paso-num {
+  background: var(--naranja-primario);
+  border-color: var(--naranja-primario);
+  color: var(--blanco);
+  box-shadow: 0 0 0 5px rgba(255, 107, 53, 0.16);
+}
+
+.paso-pago.completado { color: var(--pago-exito); }
+.paso-pago.completado .paso-num {
+  background: var(--pago-exito);
+  border-color: var(--pago-exito);
+  color: var(--blanco);
+}
+.paso-pago.completado .paso-num::after {
+  content: "✓";
+  font-size: 0.85rem;
+}
+.paso-pago.completado .paso-num-digito { display: none; }
+.paso-pago.completado::before,
+.paso-pago.activo::before { background: var(--naranja-vivo); }
+.paso-pago.completado ~ .paso-pago::before { background: var(--borde); }
+
+/* ---------- Contenedor general ---------- */
+.contenedor-pago {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 2.2rem 1.4rem 4rem;
+}
+
+/* ---------- Sin pedido pendiente ---------- */
+.aviso-sin-pedido {
+  text-align: center;
+  background: var(--blanco);
+  border-radius: 20px;
+  padding: 3rem 1.5rem;
+  box-shadow: var(--pago-sombra-card);
+  color: var(--gris-texto);
+  max-width: 460px;
+  margin: 0 auto;
+}
+
+.aviso-sin-pedido span { font-size: 2.6rem; display: block; margin-bottom: 0.8rem; }
+
+.btn-volver-menu {
+  display: inline-block;
+  margin-top: 1.2rem;
+  background: var(--naranja-primario);
+  color: var(--blanco);
+  text-decoration: none;
+  font-weight: 700;
+  padding: 0.7rem 1.4rem;
+  border-radius: 999px;
+}
+
+/* ---------- Layout de checkout (dos columnas) ---------- */
+.checkout-grid {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  align-items: start;
+  gap: 1.6rem;
+}
+
+@media (max-width: 860px) {
+  .checkout-grid { grid-template-columns: 1fr; }
+}
+
+/* ---------- Columna: resumen + confianza ---------- */
+.checkout-resumen {
+  position: sticky;
+  top: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+@media (max-width: 860px) {
+  .checkout-resumen { position: static; }
+}
+
+.resumen-tarjeta {
+  background: var(--blanco);
+  border-radius: 20px;
+  box-shadow: var(--pago-sombra-card);
+  padding: 1.4rem 1.5rem;
+}
+
+.resumen-titulo {
+  font-family: var(--fuente-display);
+  font-size: 1.02rem;
+  margin-bottom: 0.9rem;
+}
+
+.pago-mesa { color: var(--gris-texto); font-size: 0.9rem; margin-bottom: 0.7rem; }
+.pago-mesa b { color: var(--carbon); }
+
+.pago-lista-items {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin-bottom: 0.9rem;
+  padding-bottom: 0.9rem;
+  border-bottom: 1px dashed var(--borde);
+}
+
+.pago-lista-items li {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.6rem;
+  font-size: 0.86rem;
+  color: var(--carbon);
+}
+
+.pago-linea-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--fuente-display);
+}
+
+.pago-linea-total span:first-child {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--gris-texto);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.pago-linea-total span:last-child {
+  font-weight: 800;
+  font-size: 1.5rem;
+  color: var(--naranja-oscuro);
+}
+
+.confianza-lista {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  background: var(--blanco);
+  border-radius: 16px;
+  padding: 1.1rem 1.2rem;
+  box-shadow: var(--pago-sombra-card);
+}
+
+.confianza-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--carbon);
+}
+
+.confianza-item svg {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  color: var(--pago-exito);
+}
+
+/* ---------- Columna: pasos ---------- */
+.checkout-principal {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.checkout-principal .pago-bloque {
+  background: var(--blanco);
+  border-radius: 20px;
+  box-shadow: var(--pago-sombra-card);
+  padding: 1.7rem 1.8rem;
+}
+
+.pago-bloque h2 {
+  font-family: var(--fuente-display);
+  font-size: 1.1rem;
+  margin-bottom: 1.1rem;
+}
+
+/* ---------- Método de pago ---------- */
+.opciones-pago-pro {
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.7rem;
+}
+
+.opciones-pago-pro .opcion-pago {
+  position: relative;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.1rem 0.5rem;
+  border-radius: 16px;
+  border: 1.5px solid var(--borde);
+  background: var(--crema);
+  font-size: 1rem;
+}
+
+.opciones-pago-pro .opcion-pago-icono {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--blanco);
+  font-size: 1.3rem;
+  box-shadow: 0 4px 10px rgba(43, 33, 24, 0.08);
+  transition: transform 0.2s ease;
+}
+
+.opciones-pago-pro .opcion-pago span:last-child {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--carbon);
+}
+
+.opciones-pago-pro .opcion-pago:hover { border-color: var(--naranja-vivo); }
+.opciones-pago-pro .opcion-pago:hover .opcion-pago-icono { transform: translateY(-2px); }
+
+.opciones-pago-pro .opcion-pago.activa {
+  background: var(--naranja-suave);
+  border-color: var(--naranja-primario);
+  box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.14);
+}
+
+.opciones-pago-pro .opcion-pago.activa::after {
+  content: "✓";
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--naranja-primario);
+  color: var(--blanco);
+  font-size: 0.62rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.campo-nombre { margin-top: 1.2rem; }
+
+.campo-nombre label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--gris-texto);
+  margin-bottom: 0.35rem;
+}
+
+.campo-nombre input {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  border-radius: 12px;
+  border: 1.5px solid var(--borde);
+  background: var(--crema);
+  font-size: 0.92rem;
+  font-family: inherit;
+  color: var(--carbon);
+  outline: none;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.campo-nombre input:focus {
+  border-color: var(--naranja-primario);
+  background: var(--blanco);
+}
+
+.error-pago {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #FDECEC;
+  color: #C0392B;
+  border: 1px solid #F4C7C3;
+  padding: 0.6rem 0.8rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-top: 1rem;
+}
+
+.error-pago::before { content: "⚠️"; }
+
+.detalle-metodo {
+  margin-top: 1.2rem;
+  padding-top: 1.2rem;
+  border-top: 1px dashed var(--borde);
+}
+
+/* Detalle de pago */
+.pago-instruccion {
+  color: var(--gris-texto);
+  font-size: 0.85rem;
+  line-height: 1.55;
+}
+
+.pago-instruccion-qr { margin-top: 0.9rem; }
+
+.cuenta-receptora {
+  background: var(--crema);
+  border: 1px solid var(--borde);
+  border-radius: 14px;
+  padding: 1rem 1.1rem;
+  font-size: 0.85rem;
+  line-height: 1.7;
+}
+
+.cuenta-receptora-titulo,
+.fac-cuenta-titulo {
+  font-weight: 800;
+  color: var(--naranja-oscuro);
+  margin-bottom: 0.3rem;
+}
+
+/* QR falso, con marco tipo "escáner" */
+.qr-envoltorio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: 1.2rem;
+}
+
+.qr-caja {
+  position: relative;
+  width: 210px;
+  height: 210px;
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--blanco);
+  box-shadow: var(--pago-sombra-card);
+  padding: 12px;
+}
+
+.qr-caja::before,
+.qr-caja::after,
+.qr-envoltorio::before,
+.qr-envoltorio::after { content: none; }
+
+.qr-caja svg { display: block; width: 100%; height: 100%; border-radius: 8px; }
+.qr-ojo-externo { fill: #2B2118; }
+.qr-ojo-interno { fill: #2B2118; }
+
+.qr-monto {
+  font-family: var(--fuente-display);
+  font-weight: 800;
+  font-size: 1.3rem;
+  color: var(--naranja-oscuro);
+}
+
+/* ---------- Verificación segura ---------- */
+.candado-seguro {
+  display: flex;
+  gap: 0.9rem;
+  align-items: flex-start;
+  margin-bottom: 1.2rem;
+}
+
+.candado-seguro-badge {
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--naranja-suave);
+  font-size: 1.35rem;
+}
+
+.candado-seguro h2 { margin-bottom: 0.3rem; }
+
+.panel-banco {
+  position: relative;
+  background: linear-gradient(160deg, var(--pago-tinta-suave), var(--pago-tinta));
+  color: #F3F4F6;
+  border-radius: 18px;
+  padding: 1.2rem 1.3rem;
+  margin-bottom: 1.3rem;
+  overflow: hidden;
+}
+
+.panel-banco::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(220px 120px at 90% -20%, rgba(255, 140, 74, 0.35), transparent 70%);
+  pointer-events: none;
+}
+
+.panel-banco-titulo {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 800;
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+}
+
+.panel-banco-texto { font-size: 0.72rem; color: #9CA3AF; line-height: 1.55; margin-bottom: 0.9rem; }
+
+.panel-banco-codigo {
+  position: relative;
+  font-family: var(--fuente-display);
+  font-size: 1.8rem;
+  font-weight: 800;
+  letter-spacing: 0.35rem;
+  text-align: center;
+  color: #FBBF24;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px dashed rgba(251, 191, 36, 0.4);
+  border-radius: 12px;
+  padding: 0.6rem 0.4rem;
+}
+
+.campo-codigo { margin-bottom: 0.7rem; }
+
+.campo-codigo label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--gris-texto);
+  margin-bottom: 0.35rem;
+}
+
+.campo-codigo input {
+  width: 100%;
+  padding: 0.8rem 0.8rem;
+  border-radius: 12px;
+  border: 1.5px solid var(--borde);
+  background: var(--crema);
+  font-size: 1.4rem;
+  letter-spacing: 0.45rem;
+  text-align: center;
+  font-family: var(--fuente-display);
+  font-weight: 700;
+  color: var(--carbon);
+  outline: none;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.campo-codigo input:focus {
+  border-color: var(--naranja-primario);
+  background: var(--blanco);
+  box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.12);
+}
+
+.cronometro-codigo {
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--gris-texto);
+  margin-bottom: 0.9rem;
+}
+
+.btn-reenviar-codigo {
+  width: 100%;
+  border: none;
+  background: transparent;
+  color: var(--naranja-oscuro);
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 0.6rem;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+
+.btn-reenviar-codigo:hover { text-decoration: underline; }
+
+/* ---------- Botones de acción ---------- */
+.btn-verificar-pago,
+.btn-enviar-cocina {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  border: none;
+  background: linear-gradient(135deg, var(--naranja-vivo), var(--naranja-primario));
+  color: var(--blanco);
+  font-family: var(--fuente-display);
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 0.95rem;
+  border-radius: 14px;
+  cursor: pointer;
+  box-shadow: 0 12px 26px rgba(216, 73, 31, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  margin-top: 0.6rem;
+}
+
+.btn-verificar-pago svg,
+.btn-enviar-cocina svg {
+  width: 18px;
+  height: 18px;
+  transition: transform 0.2s ease;
+}
+
+.btn-verificar-pago:hover,
+.btn-enviar-cocina:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 34px rgba(216, 73, 31, 0.38);
+}
+
+.btn-verificar-pago:hover svg,
+.btn-enviar-cocina:hover svg { transform: translateX(3px); }
+
+.btn-verificar-pago:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.pago-verificando {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  text-align: center;
+  color: var(--gris-texto);
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-top: 0.8rem;
+}
+
+.spinner-verificando {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2.5px solid var(--borde);
+  border-top-color: var(--naranja-primario);
+  animation: girar 0.8s linear infinite;
+}
+
+@keyframes girar { to { transform: rotate(360deg); } }
+
+/* ---------- Verificado + factura ---------- */
+.pago-exito {
+  text-align: center;
+  margin-bottom: 1.3rem;
+}
+
+.pago-exito-check {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 0.7rem;
+  border-radius: 50%;
+  background: var(--pago-exito-suave);
+  color: var(--pago-exito);
+  font-size: 1.6rem;
+  font-weight: 800;
+  animation: exito-aparecer 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes exito-aparecer {
+  from { transform: scale(0.6); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+.pago-exito p { font-weight: 700; color: var(--carbon); }
+
+@media (prefers-reduced-motion: reduce) {
+  .pago-exito-check, .spinner-verificando { animation: none; }
+}
+
+@media (max-width: 560px) {
+  .contenedor-pago { padding: 1.4rem 1rem 5rem; }
+  .checkout-principal .pago-bloque { padding: 1.3rem 1.2rem; }
+  .qr-caja { width: 176px; height: 176px; }
+  .panel-banco-codigo { font-size: 1.4rem; letter-spacing: 0.25rem; }
+}

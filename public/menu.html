@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/menu.css" />
+  <link rel="stylesheet" href="css/factura.css" />
 </head>
 <body>
 
@@ -96,15 +97,6 @@
           <input type="number" id="campoMesa" min="1" max="8" placeholder="Ej: 4" inputmode="numeric" />
         </div>
 
-        <div class="campo-pago">
-          <span class="campo-pago-etiqueta">Método de pago</span>
-          <div class="opciones-pago" id="opcionesPago" role="radiogroup" aria-label="Método de pago">
-            <button type="button" class="opcion-pago" data-pago="efectivo">💵<span>Efectivo</span></button>
-            <button type="button" class="opcion-pago" data-pago="tarjeta">💳<span>Tarjeta</span></button>
-            <button type="button" class="opcion-pago" data-pago="qr">📱<span>Código QR</span></button>
-          </div>
-        </div>
-
         <p class="error-confirmar" id="errorConfirmar" hidden></p>
 
         <div class="carrito-linea">
@@ -115,7 +107,8 @@
           <span>Total</span>
           <span id="carritoTotal">$0</span>
         </div>
-        <button class="btn-confirmar" id="btnConfirmar">Confirmar y pagar pedido</button>
+        <button class="btn-confirmar" id="btnConfirmar">Ir a pagar →</button>
+        <p class="aviso-pago">El pago se verifica en el módulo de pago antes de enviar tu pedido a cocina.</p>
       </div>
 
       <!-- Confirmación de pedido + seguimiento en vivo (RF005) -->
@@ -123,7 +116,8 @@
         <span class="confirmado-icono">✅</span>
         <h3>¡Pedido confirmado!</h3>
         <p>Pedido <b id="numeroPedido">#0000</b> · Mesa <b id="mesaConfirmada">—</b></p>
-        <p class="confirmado-sub">Pago recibido. Cocina ya fue notificada.</p>
+        <p class="confirmado-sub">Pago verificado. Cocina ya fue notificada.</p>
+        <button class="btn-ver-factura" id="btnVerFactura">🧾 Ver factura</button>
 
         <ol class="seguimiento" id="seguimiento" aria-label="Estado del pedido">
           <li class="seguimiento-paso" data-estado="pendiente">
@@ -153,21 +147,20 @@
 
   </div>
 
+  <!-- Modal de factura -->
+  <div class="modal-factura" id="modalFactura" hidden>
+    <div class="modal-factura-fondo" id="modalFacturaFondo"></div>
+    <div class="modal-factura-caja" id="modalFacturaContenido" role="dialog" aria-modal="true" aria-label="Factura"></div>
+  </div>
+
   <!-- Botón flotante "Ver pedido" en móvil -->
   <button class="fab-carrito" id="fabCarrito" hidden>
     <span>Ver pedido</span>
     <span class="fab-total" id="fabTotal">$0</span>
   </button>
 
-  <!-- Acceso del personal (demo del prototipo) -->
-  <footer class="pie-staff">
-    <span>Acceso del personal:</span>
-    <a href="cocina.html">👨‍🍳 Cocina</a>
-    <span class="pie-staff-punto">·</span>
-    <a href="admin.html">📊 Administración</a>
-  </footer>
-
   <script src="js/datos.js"></script>
+  <script src="js/factura.js"></script>
   <script src="js/menu.js"></script>
 </body>
 </html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pago | PidaPues</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/menu.css" />
+  <link rel="stylesheet" href="css/factura.css" />
+  <link rel="stylesheet" href="css/pago.css" />
+</head>
+<body class="cuerpo-pago">
+
+  <!-- ===================== ENCABEZADO ===================== -->
+  <header class="encabezado encabezado-pago">
+    <a href="menu.html" class="marca">
+      <span class="marca-icono">🍽️</span>
+      <span class="marca-texto">Pida<b>Pues</b></span>
+    </a>
+    <span class="etiqueta-panel etiqueta-segura">
+      <svg class="icono-candado" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 10V8a6 6 0 1 1 12 0v2M5 10h14a1 1 0 0 1 1 1v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-9a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Pago seguro
+    </span>
+  </header>
+
+  <div class="contenedor-pago">
+
+    <!-- Indicador de pasos -->
+    <ol class="pasos-pago" id="pasosPago">
+      <li class="paso-pago activo" data-paso="1"><span class="paso-num"><span class="paso-num-digito">1</span></span><span class="paso-texto">Método</span></li>
+      <li class="paso-pago" data-paso="2"><span class="paso-num"><span class="paso-num-digito">2</span></span><span class="paso-texto">Verificación</span></li>
+      <li class="paso-pago" data-paso="3"><span class="paso-num"><span class="paso-num-digito">3</span></span><span class="paso-texto">Confirmado</span></li>
+    </ol>
+
+    <!-- Sin pedido pendiente -->
+    <div class="aviso-sin-pedido" id="avisoSinPedido" hidden>
+      <span>🛒</span>
+      <p>No encontramos un pedido pendiente de pago.</p>
+      <a href="menu.html" class="btn-volver-menu">Volver al menú</a>
+    </div>
+
+    <div class="tarjeta-pago checkout-grid" id="tarjetaPago" hidden>
+
+      <!-- ===== Columna: resumen del pedido + confianza (siempre visible) ===== -->
+      <aside class="checkout-resumen">
+        <section class="resumen-tarjeta">
+          <h2 class="resumen-titulo">🧾 Resumen del pedido</h2>
+          <p class="pago-mesa">Mesa <b id="resumenMesa">—</b></p>
+          <ul class="pago-lista-items" id="resumenItems"></ul>
+          <div class="pago-linea-total">
+            <span>Total a pagar</span>
+            <span id="resumenTotal">$0</span>
+          </div>
+        </section>
+
+        <ul class="confianza-lista">
+          <li class="confianza-item">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 10V8a6 6 0 1 1 12 0v2M5 10h14a1 1 0 0 1 1 1v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-9a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Conexión cifrada de extremo a extremo</span>
+          </li>
+          <li class="confianza-item">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m9 12 2 2 4-4M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Verificación en dos pasos antes de cobrar</span>
+          </li>
+          <li class="confianza-item">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 3h8l4 4v14H7V3Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12h6M9 16h6M9 8h2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            <span>Factura electrónica incluida</span>
+          </li>
+        </ul>
+      </aside>
+
+      <!-- ===== Columna: pasos del pago ===== -->
+      <div class="checkout-principal">
+
+        <!-- ===== PASO 1: Método de pago ===== -->
+        <section class="pago-bloque" id="bloqueMetodo">
+          <h2>1. Elige tu método de pago</h2>
+          <div class="opciones-pago opciones-pago-pro" id="opcionesPago" role="radiogroup" aria-label="Método de pago">
+            <button type="button" class="opcion-pago" data-pago="efectivo">
+              <span class="opcion-pago-icono">💵</span>
+              <span>Efectivo</span>
+            </button>
+            <button type="button" class="opcion-pago" data-pago="tarjeta">
+              <span class="opcion-pago-icono">💳</span>
+              <span>Tarjeta</span>
+            </button>
+            <button type="button" class="opcion-pago" data-pago="qr">
+              <span class="opcion-pago-icono">📱</span>
+              <span>Código QR</span>
+            </button>
+          </div>
+          <div class="campo-nombre">
+            <label for="campoNombreCliente">Nombre para la factura (opcional)</label>
+            <input type="text" id="campoNombreCliente" placeholder="Ej: Juan Pérez" maxlength="60" autocomplete="off" />
+          </div>
+          <p class="error-pago" id="errorPago" hidden></p>
+
+          <div id="bloqueDetallePago" hidden>
+            <div id="detalleEfectivo" hidden class="detalle-metodo">
+              <p class="pago-instruccion">Acércate a caja o espera a que el mesero recoja el pago en efectivo por el total indicado arriba.</p>
+            </div>
+
+            <div id="detalleTarjeta" hidden class="detalle-metodo">
+              <div class="cuenta-receptora" id="cuentaReceptoraTarjeta"></div>
+              <p class="pago-instruccion">Realiza el pago con datáfono o transferencia a la cuenta anterior.</p>
+            </div>
+
+            <div id="detalleQr" hidden class="detalle-metodo">
+              <div class="qr-envoltorio">
+                <div class="qr-caja" id="qrCaja" aria-label="Código QR de pago (simulado)"></div>
+                <p class="qr-monto" id="qrMonto">$0</p>
+              </div>
+              <div class="cuenta-receptora" id="cuentaReceptoraQr"></div>
+              <p class="pago-instruccion pago-instruccion-qr">⚠️ Este es un QR de demostración generado en el momento; no corresponde a una pasarela de pago real.</p>
+            </div>
+
+            <button class="btn-verificar-pago" id="btnContinuarVerificacion">
+              <span>Continuar a verificación segura</span>
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+        </section>
+
+        <!-- ===== PASO 2: Verificación segura (código de un solo uso) ===== -->
+        <section class="pago-bloque" id="bloqueVerificacion" hidden>
+          <div class="candado-seguro">
+            <span class="candado-seguro-badge">🔐</span>
+            <div>
+              <h2>2. Verificación segura del pago</h2>
+              <p class="pago-instruccion">Por tu seguridad, confirmamos el pago con un código de un solo uso antes de enviar el pedido a cocina.</p>
+            </div>
+          </div>
+
+          <div class="panel-banco" id="panelBanco">
+            <p class="panel-banco-titulo">📲 Simulación de notificación bancaria</p>
+            <p class="panel-banco-texto">En un entorno real este código llegaría por SMS o por la app de tu banco. Como este es un prototipo (sin pasarela de pago real), te lo mostramos aquí mismo:</p>
+            <p class="panel-banco-codigo" id="codigoDemo">— — — — — —</p>
+          </div>
+
+          <div class="campo-codigo">
+            <label for="campoCodigo">Ingresa el código de 6 dígitos</label>
+            <input type="text" id="campoCodigo" inputmode="numeric" maxlength="6" placeholder="000000" autocomplete="one-time-code" />
+          </div>
+
+          <p class="cronometro-codigo">Intentos restantes: <b id="intentosRestantes">3</b></p>
+          <p class="error-pago" id="errorVerificacion" hidden></p>
+
+          <button class="btn-verificar-pago" id="btnVerificarCodigo">
+            <span>Verificar y confirmar pago</span>
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m5 13 4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <button class="btn-reenviar-codigo" id="btnReenviarCodigo" hidden>Solicitar un nuevo código</button>
+          <p class="pago-verificando" id="pagoVerificando" hidden><span class="spinner-verificando" aria-hidden="true"></span>Verificando el pago con el banco…</p>
+        </section>
+
+        <!-- ===== PASO 3: Pago verificado + factura ===== -->
+        <section class="pago-bloque" id="bloqueVerificado" hidden>
+          <div class="pago-exito">
+            <span class="pago-exito-check">✓</span>
+            <p>Pago verificado. Tu pedido ya fue enviado a cocina.</p>
+          </div>
+          <div id="facturaContenedor"></div>
+          <button class="btn-enviar-cocina" id="btnEnviarCocina">
+            <span>Ver seguimiento del pedido</span>
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </section>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <script src="js/datos.js"></script>
+  <script src="js/factura.js"></script>
+  <script src="js/pago.js"></script>
+</body>
+</html>

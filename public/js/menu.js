@@ -3,17 +3,20 @@
 // Productos, búsqueda, carrito, pedido, pago y seguimiento en vivo
 // =========================================
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+
+  await PidaPuesDatos.listo;
 
   /* ---------- 1. Datos ---------- */
   const productos = PidaPuesDatos.productos;
 
   /* ---------- 2. Estado ---------- */
   const CLAVE_CARRITO = "pidapues_carrito";
+  const CLAVE_PEDIDO_PENDIENTE = "pidapues_pedido_pendiente";
+  const CLAVE_PEDIDO_ACTIVO = "pidapues_pedido_activo";
   let carrito = cargarCarrito();          // [{id, cantidad, observacion}, ...]
   let categoriaActiva = "todos";
   let textoBusqueda = "";
-  let metodoPagoSeleccionado = null;
   let pedidoActivoId = null;
   let temporizadorSeguimiento = null;
 
@@ -34,8 +37,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const seguimiento = document.getElementById("seguimiento");
 
   const campoMesa = document.getElementById("campoMesa");
-  const opcionesPago = document.getElementById("opcionesPago");
   const errorConfirmar = document.getElementById("errorConfirmar");
+  const btnVerFactura = document.getElementById("btnVerFactura");
+  const modalFactura = document.getElementById("modalFactura");
+  const modalFacturaFondo = document.getElementById("modalFacturaFondo");
+  const modalFacturaContenido = document.getElementById("modalFacturaContenido");
 
   const panelCarrito = document.getElementById("panelCarrito");
   const superposicion = document.getElementById("superposicion");
@@ -68,6 +74,15 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ---------- 5. Render de productos ---------- */
+
+  // Si el producto tiene foto, la muestra; si no existe o falla al cargar,
+  // cae automáticamente al emoji (así el menú nunca se ve roto).
+  function imagenONEmoji(p) {
+    if (!p.imagenUrl) return p.emoji;
+    return `<img src="${p.imagenUrl}" alt="${p.nombre}" loading="lazy"
+                 onerror="this.replaceWith(Object.assign(document.createElement('span'), { textContent: '${p.emoji}' }))" />`;
+  }
+
   function productosFiltrados() {
     return productos.filter((p) => {
       const coincideCategoria = categoriaActiva === "todos" || p.categoria === categoriaActiva;
@@ -88,7 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const tarjeta = document.createElement("article");
       tarjeta.className = "tarjeta";
       tarjeta.innerHTML = `
-        <div class="tarjeta-imagen">${p.emoji}</div>
+        <div class="tarjeta-imagen">${imagenONEmoji(p)}</div>
         <h3 class="tarjeta-nombre">${p.nombre}</h3>
         <p class="tarjeta-descripcion">${p.descripcion}</p>
         <div class="tarjeta-pie">
@@ -178,7 +193,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const fila = document.createElement("div");
       fila.className = "item-carrito";
       fila.innerHTML = `
-        <div class="item-emoji">${producto.emoji}</div>
+        <div class="item-emoji">${imagenONEmoji(producto)}</div>
         <div class="item-info">
           <div class="item-nombre">${producto.nombre}</div>
           <div class="item-precio-unidad">${formatoPesos(producto.precio)} c/u</div>
@@ -234,16 +249,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  /* ---------- 7. Método de pago (RF006) ---------- */
-  opcionesPago.addEventListener("click", (e) => {
-    const boton = e.target.closest(".opcion-pago");
-    if (!boton) return;
-    metodoPagoSeleccionado = boton.dataset.pago;
-    opcionesPago.querySelectorAll(".opcion-pago").forEach((b) => b.classList.remove("activa"));
-    boton.classList.add("activa");
-    ocultarError();
-  });
-
+  /* ---------- 7. Validación previa ---------- */
   function mostrarError(mensaje) {
     errorConfirmar.textContent = mensaje;
     errorConfirmar.hidden = false;
@@ -253,18 +259,17 @@ document.addEventListener("DOMContentLoaded", () => {
     errorConfirmar.hidden = true;
   }
 
-  /* ---------- 8. Confirmar y pagar pedido (RF001, RF006, RF007) ---------- */
-  function confirmarPedido() {
+  /* ---------- 8. Ir al módulo de pago (RF001, RF006, RF007) ----------
+     El pedido NO se crea aquí. Solo se guarda como "pendiente de pago"
+     y se redirige a pago.html, donde se verifica el pago (con QR
+     simulado y factura) antes de enviarlo a cocina. */
+  function irAPagar() {
     if (carrito.length === 0) return;
 
     const mesa = Number(campoMesa.value);
     if (!mesa || mesa < 1 || mesa > PidaPuesDatos.TOTAL_MESAS) {
       mostrarError(`Ingresa un número de mesa válido (1 a ${PidaPuesDatos.TOTAL_MESAS}).`);
       campoMesa.focus();
-      return;
-    }
-    if (!metodoPagoSeleccionado) {
-      mostrarError("Selecciona un método de pago para continuar.");
       return;
     }
     ocultarError();
@@ -275,11 +280,30 @@ document.addEventListener("DOMContentLoaded", () => {
       observacion: i.observacion || "",
     }));
 
-    const pedido = PidaPuesDatos.crearPedido({
-      mesa,
-      items,
-      metodoPago: metodoPagoSeleccionado,
-    });
+    const pedidoPendiente = { mesa, items };
+
+    try {
+      localStorage.setItem(CLAVE_PEDIDO_PENDIENTE, JSON.stringify(pedidoPendiente));
+    } catch {
+      mostrarError("No se pudo continuar al pago. Intenta de nuevo.");
+      return;
+    }
+
+    window.location.href = "pago.html";
+  }
+
+  /* ---------- 8b. Mostrar confirmación si venimos de un pago verificado ---------- */
+  async function revisarPedidoRecienPagado() {
+    let idGuardado = null;
+    try {
+      idGuardado = localStorage.getItem(CLAVE_PEDIDO_ACTIVO);
+    } catch {
+      idGuardado = null;
+    }
+    if (!idGuardado) return;
+
+    const pedido = await PidaPuesDatos.obtenerPedido(Number(idGuardado));
+    if (!pedido) return;
 
     pedidoActivoId = pedido.id;
     numeroPedido.textContent = "#" + pedido.id;
@@ -298,6 +322,21 @@ document.addEventListener("DOMContentLoaded", () => {
     fabCarrito.hidden = true;
   }
 
+  /* ---------- 8c. Factura del pedido activo ---------- */
+  async function abrirModalFactura() {
+    if (!pedidoActivoId) return;
+    const pedido = await PidaPuesDatos.obtenerPedido(pedidoActivoId);
+    if (!pedido) return;
+    modalFacturaContenido.innerHTML = PidaPuesFactura.renderizarHTML(pedido) +
+      `<button class="btn-cerrar-factura" id="btnCerrarFactura">Cerrar</button>`;
+    modalFactura.hidden = false;
+    document.getElementById("btnCerrarFactura").addEventListener("click", cerrarModalFactura);
+  }
+
+  function cerrarModalFactura() {
+    modalFactura.hidden = true;
+  }
+
   /* ---------- 9. Seguimiento en vivo del pedido (RF005) ---------- */
   const ORDEN_ESTADOS = ["pendiente", "en_preparacion", "listo", "entregado"];
 
@@ -312,9 +351,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function iniciarSeguimientoEnVivo() {
     detenerSeguimientoEnVivo();
-    temporizadorSeguimiento = setInterval(() => {
+    temporizadorSeguimiento = setInterval(async () => {
       if (!pedidoActivoId) return;
-      const pedido = PidaPuesDatos.obtenerPedido(pedidoActivoId);
+      const pedido = await PidaPuesDatos.obtenerPedido(pedidoActivoId);
       if (pedido) actualizarPasosSeguimiento(pedido.estado);
     }, 1500);
   }
@@ -324,19 +363,13 @@ document.addEventListener("DOMContentLoaded", () => {
     temporizadorSeguimiento = null;
   }
 
-  // Refleja cambios que haga Cocina en otra pestaña al instante
-  window.addEventListener("storage", () => {
-    if (!pedidoActivoId || carritoConfirmado.hidden) return;
-    const pedido = PidaPuesDatos.obtenerPedido(pedidoActivoId);
-    if (pedido) actualizarPasosSeguimiento(pedido.estado);
-  });
-
   function iniciarNuevoPedido() {
     detenerSeguimientoEnVivo();
     pedidoActivoId = null;
-    metodoPagoSeleccionado = null;
+    try {
+      localStorage.removeItem(CLAVE_PEDIDO_ACTIVO);
+    } catch { /* almacenamiento no disponible */ }
     campoMesa.value = "";
-    opcionesPago.querySelectorAll(".opcion-pago").forEach((b) => b.classList.remove("activa"));
     carritoConfirmado.hidden = true;
     carritoLista.hidden = false;
     renderizarCarrito();
@@ -374,10 +407,13 @@ document.addEventListener("DOMContentLoaded", () => {
   btnCerrarCarrito.addEventListener("click", cerrarCarritoMovil);
   superposicion.addEventListener("click", cerrarCarritoMovil);
 
-  btnConfirmar.addEventListener("click", confirmarPedido);
+  btnConfirmar.addEventListener("click", irAPagar);
   btnNuevoPedido.addEventListener("click", iniciarNuevoPedido);
+  btnVerFactura.addEventListener("click", abrirModalFactura);
+  modalFacturaFondo.addEventListener("click", cerrarModalFactura);
 
   /* ---------- 12. Arranque ---------- */
   renderizarProductos();
   renderizarCarrito();
+  await revisarPedidoRecienPagado();
 });

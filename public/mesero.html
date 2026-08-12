@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mesero | PidaPues</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/menu.css" />
+  <link rel="stylesheet" href="css/mesero.css" />
+  <link rel="stylesheet" href="css/auth.css" />
+</head>
+<body>
+
+  <!-- ===================== ENCABEZADO ===================== -->
+  <header class="encabezado">
+    <a href="index.html" class="marca">
+      <span class="marca-icono">🍽️</span>
+      <span class="marca-texto">Pida<b>Pues</b></span>
+    </a>
+    <span class="etiqueta-panel">🧑‍🍽️ Mesero</span>
+    <nav class="nav-staff">
+      <a href="index.html">🏠 Inicio</a>
+    </nav>
+  </header>
+
+  <!-- Aviso visible si falla la conexión con el servidor/base de datos -->
+  <div class="aviso-conexion" id="avisoConexion" role="alert" hidden>
+    ⚠️ No se pudo conectar con el servidor.
+    <span class="aviso-conexion-detalle" id="avisoConexionDetalle"></span>
+    Reintentando…
+  </div>
+
+  <div class="toast-contenedor" id="toastContenedor" aria-live="polite"></div>
+
+  <div class="contenedor-mesero">
+
+    <div class="titulo-seccion">
+      <h1>Pedidos listos para entregar</h1>
+      <p>Cocina los marca como "Listo" y aquí se asignan al mesero para llevarlos a la mesa</p>
+    </div>
+
+    <!-- Grilla de pedidos -->
+    <section class="grilla-pedidos" id="grillaPedidos" aria-live="polite"></section>
+
+    <!-- Estado vacío -->
+    <div class="estado-vacio" id="estadoVacioPedidos" hidden>
+      <span class="estado-vacio-icono">🧑‍🍽️</span>
+      <p>No hay pedidos esperando entrega en este momento.</p>
+      <p class="estado-vacio-sub">Aparecerán aquí en cuanto cocina marque un pedido como "Listo".</p>
+    </div>
+
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script src="js/datos.js"></script>
+  <script src="js/mesero.js"></script>
+</body>
+</html>

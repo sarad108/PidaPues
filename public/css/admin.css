@@ -203,6 +203,7 @@
 .pill-estado.en_preparacion { background: var(--naranja-suave); color: var(--naranja-oscuro); }
 .pill-estado.listo { background: #E7F6E4; color: #2E7D32; }
 .pill-estado.entregado { background: #F1E9E0; color: #8A7A6D; }
+.pill-estado.pendiente_pago { background: #FDECEC; color: #C0392B; }
 
 .tabla-vacia {
   text-align: center;

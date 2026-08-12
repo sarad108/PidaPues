@@ -1,0 +1,101 @@
+/* =========================================
+   PidaPues — Estilos compartidos: Factura
+   Usado en pago.html (tras verificar el pago) y en el modal
+   "Ver factura" del menú del cliente.
+   ========================================= */
+
+.factura {
+  background: var(--crema);
+  border: 1px solid var(--borde);
+  border-radius: 16px;
+  padding: 1.2rem;
+  font-size: 0.85rem;
+  color: var(--carbon);
+  margin-bottom: 1.2rem;
+  text-align: left;
+}
+
+.factura-encabezado {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px dashed var(--borde);
+  margin-bottom: 0.8rem;
+}
+
+.factura-negocio {
+  font-family: var(--fuente-display);
+  font-weight: 800;
+  font-size: 1rem;
+  color: var(--naranja-oscuro);
+}
+
+.factura-dato { color: var(--gris-texto); font-size: 0.75rem; margin-top: 0.1rem; }
+
+.factura-numero { text-align: right; }
+.factura-numero-etiqueta { font-size: 0.72rem; color: var(--gris-texto); font-weight: 700; }
+.factura-numero-valor { font-family: var(--fuente-display); font-weight: 800; }
+
+.factura-cliente { margin-bottom: 0.9rem; line-height: 1.6; }
+
+.factura-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 0.9rem;
+}
+
+.factura-tabla th {
+  text-align: left;
+  font-size: 0.72rem;
+  color: var(--gris-texto);
+  border-bottom: 1px solid var(--borde);
+  padding-bottom: 0.4rem;
+}
+
+.factura-tabla td {
+  padding: 0.35rem 0;
+  border-bottom: 1px solid var(--borde);
+  font-size: 0.82rem;
+}
+
+.fac-centro { text-align: center; }
+.fac-derecha { text-align: right; }
+
+.factura-total {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--fuente-display);
+  font-weight: 800;
+  font-size: 1.05rem;
+  padding-top: 0.4rem;
+  margin-bottom: 0.9rem;
+}
+
+.fac-cuenta {
+  background: var(--blanco);
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+  padding: 0.7rem 0.9rem;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  margin-bottom: 0.8rem;
+}
+
+.fac-cuenta-titulo,
+.cuenta-receptora-titulo {
+  font-weight: 800;
+  color: var(--naranja-oscuro);
+  margin-bottom: 0.3rem;
+}
+
+.factura-pie {
+  font-size: 0.7rem;
+  color: var(--gris-texto);
+  line-height: 1.4;
+}
+
+@media (max-width: 560px) {
+  .factura-encabezado { flex-direction: column; }
+  .factura-numero { text-align: left; }
+}

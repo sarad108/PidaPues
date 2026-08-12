@@ -9,6 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/menu.css" />
   <link rel="stylesheet" href="css/admin.css" />
+  <link rel="stylesheet" href="css/auth.css" />
 </head>
 <body>
 
@@ -20,10 +21,16 @@
     </a>
     <span class="etiqueta-panel">📊 Administración</span>
     <nav class="nav-staff">
-      <a href="menu.html">Cliente</a>
-      <a href="cocina.html">Cocina</a>
+      <a href="index.html">🏠 Inicio</a>
     </nav>
   </header>
+
+  <!-- Aviso visible si falla la conexión con el servidor/base de datos -->
+  <div class="aviso-conexion" id="avisoConexion" role="alert" hidden>
+    ⚠️ No se pudo conectar con el servidor.
+    <span class="aviso-conexion-detalle" id="avisoConexionDetalle"></span>
+    Reintentando…
+  </div>
 
   <div class="contenedor-admin">
 
@@ -89,6 +96,7 @@
 
   </div>
 
+  <script src="js/auth.js"></script>
   <script src="js/datos.js"></script>
   <script src="js/admin.js"></script>
 </body>

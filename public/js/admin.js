@@ -1,12 +1,16 @@
 // =========================================
 // PidaPues — admin.js
-// Reportes de ventas (RF008), tiempos de servicio (RF009),
-// historial de transacciones (RF010) y estado de mesas (RF011)
+// Reportes de ventas, tiempos de servicio, historial de
+// transacciones y estado de mesas — leídos desde la API/MySQL.
 // =========================================
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+
+  await PidaPuesAuth.exigirAcceso("admin", "Administración");
+  await PidaPuesDatos.listo;
 
   const ETIQUETA_ESTADO = {
+    pendiente_pago: "Pago no verificado",
     pendiente: "Pendiente",
     en_preparacion: "En preparación",
     listo: "Listo",
@@ -20,6 +24,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const historialVacio = document.getElementById("historialVacio");
   const tiemposVacio = document.getElementById("tiemposVacio");
   const btnReiniciarDemo = document.getElementById("btnReiniciarDemo");
+  const avisoConexion = document.getElementById("avisoConexion");
+  const avisoConexionDetalle = document.getElementById("avisoConexionDetalle");
+
+  function mostrarAvisoConexion(error) {
+    avisoConexionDetalle.textContent = error && error.message ? `(${error.message})` : "";
+    avisoConexion.hidden = false;
+  }
+  function ocultarAvisoConexion() {
+    avisoConexion.hidden = true;
+  }
 
   function escaparHtml(texto) {
     const div = document.createElement("div");
@@ -34,18 +48,20 @@ document.addEventListener("DOMContentLoaded", () => {
     }).join(", ");
   }
 
-  /* ---------- RF008: Tarjetas de resumen de ventas ---------- */
+  /* ---------- Tarjetas de resumen de ventas ---------- */
   function renderizarResumen(pedidos) {
     const pagados = pedidos.filter((p) => p.pagado);
+    const sinPagar = pedidos.filter((p) => !p.pagado);
     const totalVentas = pagados.reduce((suma, p) => suma + p.total, 0);
     const ticketPromedio = pagados.length ? Math.round(totalVentas / pagados.length) : 0;
-    const pendientesCocina = pedidos.filter((p) => p.estado !== "entregado").length;
+    const enCurso = pagados.filter((p) => p.estado !== "entregado").length;
 
     const tarjetas = [
-      { etiqueta: "Ventas registradas", valor: PidaPuesDatos.formatoPesos(totalVentas), acento: true },
-      { etiqueta: "Pedidos realizados", valor: pedidos.length, acento: false },
+      { etiqueta: "Ventas confirmadas", valor: PidaPuesDatos.formatoPesos(totalVentas), acento: true },
+      { etiqueta: "Pedidos pagados", valor: pagados.length, acento: false },
       { etiqueta: "Ticket promedio", valor: PidaPuesDatos.formatoPesos(ticketPromedio), acento: false },
-      { etiqueta: "Pedidos en curso", valor: pendientesCocina, acento: false },
+      { etiqueta: "Pedidos en curso", valor: enCurso, acento: false },
+      { etiqueta: "Carritos sin pago verificado", valor: sinPagar.length, acento: false },
     ];
 
     tarjetasResumen.innerHTML = tarjetas.map((t) => `
@@ -56,10 +72,10 @@ document.addEventListener("DOMContentLoaded", () => {
     `).join("");
   }
 
-  /* ---------- RF011: Estado de mesas ---------- */
-  function renderizarMesas() {
-    const mesas = PidaPuesDatos.obtenerMesas();
-    const etiquetaEstado = { libre: "Libre", ocupada: "Ocupada", pago: "En pago" };
+  /* ---------- Estado de mesas ---------- */
+  async function renderizarMesas() {
+    const mesas = await PidaPuesDatos.obtenerMesas();
+    const etiquetaEstado = { libre: "Libre", pago: "En proceso de pago", ocupada: "Ocupada" };
     grillaMesas.innerHTML = mesas.map((m) => `
       <div class="mesa" data-estado="${m.estado}">
         <div class="mesa-numero">${m.numero}</div>
@@ -68,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
     `).join("");
   }
 
-  /* ---------- RF010: Historial de pedidos y pagos ---------- */
+  /* ---------- Historial de pedidos y pagos ---------- */
   function renderizarHistorial(pedidos) {
     const ordenados = pedidos.slice().sort((a, b) => new Date(b.fechaHoraRegistro) - new Date(a.fechaHoraRegistro));
     historialVacio.hidden = ordenados.length !== 0;
@@ -79,17 +95,19 @@ document.addEventListener("DOMContentLoaded", () => {
         <td class="celda-productos">${escaparHtml(resumenProductos(p))}</td>
         <td>${PidaPuesDatos.formatoPesos(p.total)}</td>
         <td>${p.metodoPago || "—"}</td>
-        <td><span class="pill-estado ${p.estado}">${ETIQUETA_ESTADO[p.estado]}</span></td>
+        <td><span class="pill-estado ${p.estado}">${ETIQUETA_ESTADO[p.estado] || p.estado}</span></td>
         <td>${PidaPuesDatos.formatoFechaHora(p.fechaHoraRegistro)}</td>
       </tr>
     `).join("");
   }
 
-  /* ---------- RF009: Tiempos de servicio ---------- */
+  /* ---------- Tiempos de servicio ---------- */
   function renderizarTiempos(pedidos) {
-    const ordenados = pedidos.slice().sort((a, b) => new Date(b.fechaHoraRegistro) - new Date(a.fechaHoraRegistro));
-    tiemposVacio.hidden = ordenados.length !== 0;
-    tablaTiemposCuerpo.innerHTML = ordenados.map((p) => {
+    const pagados = pedidos.filter((p) => p.pagado)
+      .slice()
+      .sort((a, b) => new Date(b.fechaHoraRegistro) - new Date(a.fechaHoraRegistro));
+    tiemposVacio.hidden = pagados.length !== 0;
+    tablaTiemposCuerpo.innerHTML = pagados.map((p) => {
       const duracion = PidaPuesDatos.minutosEntre(p.fechaHoraRegistro, p.fechaHoraEntregado);
       return `
         <tr>
@@ -104,25 +122,38 @@ document.addEventListener("DOMContentLoaded", () => {
     }).join("");
   }
 
-  function renderizarTodo() {
-    const pedidos = PidaPuesDatos.obtenerPedidos();
+  async function renderizarTodo() {
+    const pedidos = await PidaPuesDatos.obtenerPedidos("admin");
     renderizarResumen(pedidos);
-    renderizarMesas();
+    await renderizarMesas();
     renderizarHistorial(pedidos);
     renderizarTiempos(pedidos);
   }
 
+  async function actualizarTodo() {
+    try {
+      await renderizarTodo();
+      ocultarAvisoConexion();
+    } catch (error) {
+      console.error("Error consultando el panel de administración:", error);
+      mostrarAvisoConexion(error);
+    }
+  }
+
   /* ---------- Utilidad de demo ---------- */
-  btnReiniciarDemo.addEventListener("click", () => {
+  btnReiniciarDemo.addEventListener("click", async () => {
     const confirmado = window.confirm("Esto borrará todos los pedidos y mesas de la demo. ¿Continuar?");
     if (!confirmado) return;
-    PidaPuesDatos.limpiarDatosDemo();
-    renderizarTodo();
+    try {
+      await PidaPuesDatos.limpiarDatosDemo();
+    } catch (error) {
+      alert(error.message || "No se pudieron reiniciar los datos de demo.");
+    }
+    await actualizarTodo();
   });
 
-  /* ---------- Actualización en vivo ---------- */
-  window.addEventListener("storage", renderizarTodo);
-  setInterval(renderizarTodo, 3000);
+  /* ---------- Actualización periódica ---------- */
+  setInterval(actualizarTodo, 3000);
 
-  renderizarTodo();
+  await actualizarTodo();
 });

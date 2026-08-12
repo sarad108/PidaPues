@@ -1,0 +1,36 @@
+CÓMO AGREGAR FOTOS DE LOS PRODUCTOS
+=====================================
+
+1. Consigue una foto (JPG o PNG) de cada producto. Ideal: cuadrada o
+   rectangular, no muy pesada (menos de 500 KB cada una para que la
+   página cargue rápido).
+
+2. Ponle a cada foto EXACTAMENTE este nombre y guárdala en esta misma
+   carpeta (public/img/productos/):
+
+   hamburguesa.jpg   -> Hamburguesa Clásica
+   pizza.jpg          -> Pizza Pepperoni
+   salchipapa.jpg      -> Salchipapa
+   perro.jpg           -> Perro Caliente
+   alitas.jpg          -> Alitas BBQ
+   gaseosa.jpg         -> Gaseosa 400ml
+   limonada.jpg        -> Limonada Natural
+   brownie.jpg         -> Brownie con Helado
+
+3. Reinicia el servidor (Ctrl+C en la terminal y luego `npm start` de
+   nuevo) y recarga la página del menú (F5). Las fotos deberían
+   aparecer automáticamente.
+
+Si un producto no tiene foto (o el nombre del archivo no coincide),
+la app muestra el emoji como respaldo — no se rompe nada.
+
+¿QUIERES USAR OTRO NOMBRE DE ARCHIVO O UNA FOTO DESDE INTERNET?
+Puedes cambiar la ruta guardada en la base de datos con este comando
+en MySQL (ajusta el id y la ruta):
+
+  UPDATE productos SET imagen_url = 'img/productos/mi-foto.jpg' WHERE id = 1;
+
+También puedes usar un link de internet en vez de un archivo local,
+por ejemplo:
+
+  UPDATE productos SET imagen_url = 'https://ejemplo.com/foto.jpg' WHERE id = 1;

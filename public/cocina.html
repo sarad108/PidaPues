@@ -9,6 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/menu.css" />
   <link rel="stylesheet" href="css/cocina.css" />
+  <link rel="stylesheet" href="css/auth.css" />
 </head>
 <body>
 
@@ -20,10 +21,16 @@
     </a>
     <span class="etiqueta-panel">👨‍🍳 Cocina</span>
     <nav class="nav-staff">
-      <a href="menu.html">Cliente</a>
-      <a href="admin.html">Administración</a>
+      <a href="index.html">🏠 Inicio</a>
     </nav>
   </header>
+
+  <!-- Aviso visible si falla la conexión con el servidor/base de datos -->
+  <div class="aviso-conexion" id="avisoConexion" role="alert" hidden>
+    ⚠️ No se pudo conectar con el servidor.
+    <span class="aviso-conexion-detalle" id="avisoConexionDetalle"></span>
+    Reintentando…
+  </div>
 
   <!-- ===================== TOAST DE NOTIFICACIÓN DE PAGO (RF007) ===================== -->
   <div class="toast-contenedor" id="toastContenedor" aria-live="polite"></div>
@@ -41,11 +48,26 @@
       <button class="filtro-estado" data-estado="pendiente">🧾 Pendientes</button>
       <button class="filtro-estado" data-estado="en_preparacion">👨‍🍳 En preparación</button>
       <button class="filtro-estado" data-estado="listo">🔔 Listos</button>
-      <button class="filtro-estado" data-estado="entregado">🍽️ Entregados</button>
     </nav>
 
-    <!-- Grilla de pedidos -->
-    <section class="grilla-pedidos" id="grillaPedidos" aria-live="polite"></section>
+    <!-- Tabla de pedidos -->
+    <div class="tabla-envoltorio">
+      <table class="tabla tabla-pedidos">
+        <thead>
+          <tr>
+            <th>Pedido</th>
+            <th>Mesa</th>
+            <th>Hora</th>
+            <th>Productos</th>
+            <th>Pago</th>
+            <th>Total</th>
+            <th>Estado</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody id="grillaPedidos" aria-live="polite"></tbody>
+      </table>
+    </div>
 
     <!-- Estado vacío -->
     <div class="estado-vacio" id="estadoVacioPedidos" hidden>
@@ -56,6 +78,7 @@
 
   </div>
 
+  <script src="js/auth.js"></script>
   <script src="js/datos.js"></script>
   <script src="js/cocina.js"></script>
 </body>
