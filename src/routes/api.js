@@ -429,21 +429,29 @@ router.patch("/pedidos/:id/cocina", requireRol("cocina"), asyncHandler(async (re
     return res.status(400).json({ error: "Estado no permitido desde cocina." });
   }
 
-  const [[fila]] = await pool.query("SELECT * FROM pedidos WHERE id = ?", [id]);
-  if (!fila) return res.status(404).json({ error: "Pedido no encontrado." });
-  if (!fila.pagado) return res.status(409).json({ error: "El pedido aún no tiene el pago verificado." });
+  const estadoRequerido = nuevoEstado === "en_preparacion" ? "pendiente" : "en_preparacion";
+  const campoFecha = nuevoEstado === "en_preparacion" ? "fecha_inicio_preparacion" : "fecha_listo";
 
-  const transicionesValidas = { pendiente: "en_preparacion", en_preparacion: "listo" };
-  if (transicionesValidas[fila.estado] !== nuevoEstado) {
+  // UPDATE atómico: la transición solo se aplica si el pedido está pagado
+  // y sigue exactamente en el estado anterior esperado en este preciso
+  // momento. Evita la condición de carrera de un SELECT+UPDATE separados
+  // (dos pantallas de cocina presionando el botón casi al mismo tiempo
+  // ya no pueden aplicar la misma transición dos veces).
+  const [resultado] = await pool.query(
+    `UPDATE pedidos SET estado = ?, ${campoFecha} = NOW()
+     WHERE id = ? AND pagado = 1 AND estado = ?`,
+    [nuevoEstado, id, estadoRequerido]
+  );
+
+  if (resultado.affectedRows === 0) {
+    const [[fila]] = await pool.query("SELECT * FROM pedidos WHERE id = ?", [id]);
+    if (!fila) return res.status(404).json({ error: "Pedido no encontrado." });
+    if (!fila.pagado) return res.status(409).json({ error: "El pedido aún no tiene el pago verificado." });
     return res.status(409).json({ error: `No se puede pasar de "${fila.estado}" a "${nuevoEstado}".` });
   }
 
-  const campoFecha = nuevoEstado === "en_preparacion" ? "fecha_inicio_preparacion" : "fecha_listo";
-  await pool.query(
-    `UPDATE pedidos SET estado = ?, ${campoFecha} = NOW() WHERE id = ?`,
-    [nuevoEstado, id]
-  );
-  await tocarMesa(fila.mesa);
+  const [[filaMesa]] = await pool.query("SELECT mesa FROM pedidos WHERE id = ?", [id]);
+  await tocarMesa(filaMesa.mesa);
 
   res.json(await obtenerPedidoCompleto(id));
 }))
@@ -459,14 +467,26 @@ router.post("/pedidos/:id/notificado", requireRol("cocina"), asyncHandler(async 
 
 router.patch("/pedidos/:id/entregar", requireRol("mesero"), asyncHandler(async (req, res) => {
   const id = Number(req.params.id);
-  const [[fila]] = await pool.query("SELECT * FROM pedidos WHERE id = ?", [id]);
-  if (!fila) return res.status(404).json({ error: "Pedido no encontrado." });
-  if (fila.estado !== "listo") {
-    return res.status(409).json({ error: 'Solo se pueden entregar pedidos en estado "listo".' });
+
+  // UPDATE atómico: solo entrega el pedido si en este preciso momento
+  // sigue en "listo". Así, si dos meseros presionan "marcar como
+  // entregado" casi simultáneamente, solo el primero tiene éxito y el
+  // segundo recibe un 409 en vez de entregar el mismo pedido dos veces.
+  const [resultado] = await pool.query(
+    "UPDATE pedidos SET estado = 'entregado', fecha_entregado = NOW() WHERE id = ? AND estado = 'listo'",
+    [id]
+  );
+
+  if (resultado.affectedRows === 0) {
+    const [[fila]] = await pool.query("SELECT * FROM pedidos WHERE id = ?", [id]);
+    if (!fila) return res.status(404).json({ error: "Pedido no encontrado." });
+    return res.status(409).json({
+      error: 'Solo se pueden entregar pedidos en estado "listo" (es posible que otro mesero ya lo haya entregado).',
+    });
   }
 
-  await pool.query("UPDATE pedidos SET estado = 'entregado', fecha_entregado = NOW() WHERE id = ?", [id]);
-  await liberarMesa(fila.mesa);
+  const [[filaMesa]] = await pool.query("SELECT mesa FROM pedidos WHERE id = ?", [id]);
+  await liberarMesa(filaMesa.mesa);
 
   res.json(await obtenerPedidoCompleto(id));
 }))
