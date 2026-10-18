@@ -1,0 +1,153 @@
+/* =========================================
+   PidaPues — Estilos: formulario de reseña (bajo la factura)
+   Usa las variables de menu.css (:root).
+   ========================================= */
+
+.resena {
+  background: var(--blanco);
+  border: 1px solid var(--borde);
+  border-radius: 16px;
+  padding: 1.1rem 1.2rem 1.2rem;
+  margin-bottom: 1.2rem;
+  text-align: center;
+}
+
+.resena-titulo {
+  font-family: var(--fuente-display);
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: var(--carbon);
+}
+
+.resena-sub {
+  font-size: 0.82rem;
+  color: var(--gris-texto);
+  margin-top: 0.15rem;
+}
+
+.resena-estrellas {
+  display: flex;
+  justify-content: center;
+  gap: 0.25rem;
+  margin-top: 0.8rem;
+}
+
+.resena-estrella {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 2.3rem;
+  line-height: 1;
+  padding: 0.1rem 0.2rem;
+  color: #E4D8CC;
+  transition: transform 0.15s ease, color 0.15s ease;
+}
+
+.resena-estrella:hover { transform: scale(1.15); }
+.resena-estrella.activa { color: #FFB400; }
+.resena-estrella:focus-visible { outline: 3px solid var(--naranja-oscuro); outline-offset: 2px; border-radius: 8px; }
+
+.resena-etiqueta {
+  min-height: 1.3rem;
+  margin-top: 0.2rem;
+  font-weight: 800;
+  font-size: 0.9rem;
+  color: var(--naranja-oscuro);
+}
+
+.resena-label {
+  display: block;
+  text-align: left;
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin: 0.7rem 0 0.3rem;
+}
+
+.resena-texto {
+  width: 100%;
+  resize: vertical;
+  min-height: 78px;
+  font: inherit;
+  font-size: 0.9rem;
+  color: var(--carbon);
+  background: var(--crema);
+  border: 1.5px solid var(--borde);
+  border-radius: 12px;
+  padding: 0.65rem 0.8rem;
+}
+
+.resena-texto:focus {
+  outline: none;
+  border-color: var(--naranja-primario);
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.18);
+}
+
+.resena-contador {
+  text-align: right;
+  font-size: 0.72rem;
+  color: var(--gris-texto);
+  margin-top: 0.2rem;
+}
+
+.resena-error {
+  background: #FDECEA;
+  color: #B3261E;
+  border-radius: 10px;
+  padding: 0.5rem 0.7rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  margin-top: 0.5rem;
+}
+
+.resena-error[hidden] { display: none; }
+
+.resena-acciones {
+  display: flex;
+  gap: 0.6rem;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 0.8rem;
+}
+
+.btn-resena-enviar {
+  font-family: var(--fuente-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--blanco);
+  background: linear-gradient(135deg, var(--naranja-vivo), var(--naranja-primario));
+  border: none;
+  border-radius: 999px;
+  padding: 0.7rem 1.6rem;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.btn-resena-enviar:hover:not(:disabled) { transform: translateY(-2px); box-shadow: var(--sombra-tarjeta-hover); }
+.btn-resena-enviar:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.btn-resena-omitir,
+.btn-resena-abrir {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--gris-texto);
+  padding: 0.5rem 0.8rem;
+  border-radius: 999px;
+}
+
+.btn-resena-omitir:hover,
+.btn-resena-abrir:hover { color: var(--naranja-oscuro); background: var(--naranja-suave); }
+
+.resena-plegada { padding: 0.5rem; background: transparent; border-style: dashed; }
+.btn-resena-abrir { color: var(--naranja-oscuro); }
+
+.resena-gracias { background: var(--naranja-suave); border-color: transparent; }
+.resena-gracias-icono { font-size: 1.8rem; }
+.resena-gracias p { font-weight: 700; margin-top: 0.2rem; font-size: 0.92rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  .resena-estrella, .btn-resena-enviar { transition: none; }
+}
