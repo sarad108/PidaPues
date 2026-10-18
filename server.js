@@ -29,20 +29,38 @@ app.use((err, _req, res, _next) => {
 });
 
 app.listen(PORT, async () => {
-  console.log(`PidaPues escuchando en http://localhost:${PORT}`);
+  console.log(`PidaPues escuchando en el puerto ${PORT}`);
 
   try {
+    // 1. Probar la conexión básica
     await pool.query("SELECT 1");
-    console.log("✅ Conexión a MySQL correcta (base de datos:", process.env.DB_NAME || "pidapues", ")");
+    console.log("✅ Conexión a MySQL correcta.");
+
+    // 2. Leer e inyectar el schema.sql automáticamente
+    const fs = require("fs");
+    const schemaPath = path.join(__dirname, "src", "schema.sql");
+    
+    if (fs.existsSync(schemaPath)) {
+      console.log("Leyendo archivo schema.sql para cargar productos...");
+      const sqlScript = fs.readFileSync(schemaPath, "utf8");
+      
+      // Separamos el archivo por cada punto y coma (;) para ejecutar consulta por consulta
+      const queries = sqlScript
+        .split(";")
+        .map(q => q.trim())
+        .filter(q => q.length > 0);
+
+      for (const query of queries) {
+        await pool.query(query);
+      }
+      console.log("✅ ¡Estructura y productos cargados con éxito en la nube!");
+    }
   } catch (err) {
-    console.error("\n❌ No se pudo conectar a MySQL. El sitio va a cargar pero SIN datos.");
-    console.error("   Motivo:", err.code || err.message);
-    console.error("   Revisa lo siguiente:");
-    console.error("   1) ¿Está corriendo MySQL en tu máquina?");
-    console.error("   2) ¿Existe el archivo .env con DB_HOST/DB_USER/DB_PASSWORD/DB_NAME correctos?");
-    console.error("   3) ¿Ya ejecutaste `mysql -u root -p < src/schema.sql` para crear la base 'pidapues'?\n");
+    console.error("\n❌ Error inicializando el schema en la nube:");
+    console.error("Motivo:", err.message);
   }
 });
+
 
 // Libera mesas inactivas (30 min) cada minuto, sin depender de que
 // haya alguna pantalla abierta consultando la API.
