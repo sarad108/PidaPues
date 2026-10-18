@@ -1,8 +1,9 @@
 // =========================================
-// PidaPues — conexión a MySQL
+// PidaPues — conexión a MySQL (Producción + Local)
 // =========================================
 
 const mysql = require("mysql2/promise");
+require("dotenv").config();
 
 const pool = mysql.createPool({
   host: process.env.DB_HOST || "localhost",
@@ -10,9 +11,15 @@ const pool = mysql.createPool({
   user: process.env.DB_USER || "root",
   password: process.env.DB_PASSWORD || "",
   database: process.env.DB_NAME || "pidapues",
+  
+  // TRUCO CLAVE: Activa el SSL seguro solo cuando esté corriendo en internet (Render)
+  ssl: process.env.DB_HOST && process.env.DB_HOST !== "localhost" 
+    ? { rejectUnauthorized: false } 
+    : null,
+
   waitForConnections: true,
   connectionLimit: 10,
-  dateStrings: true, // fechas como string "YYYY-MM-DD HH:mm:ss" (más fácil de manejar en JS)
+  dateStrings: true, // fechas como string "YYYY-MM-DD HH:mm:ss"
 });
 
 module.exports = pool;
