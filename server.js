@@ -45,16 +45,16 @@ app.listen(PORT, async () => {
       console.log("Leyendo archivo schema.sql para cargar productos...");
       let sqlScript = fs.readFileSync(schemaPath, "utf8");
       
-      // TRUCO MÁGICO: Eliminar comentarios de una sola línea (-- ...) y líneas vacías
-      const lineas Limpias = sqlScript
+      // Eliminamos comentarios de una sola línea (-- ...) y líneas vacías
+      const lineasLimpias = sqlScript
         .split("\n")
         .map(linea => linea.trim())
         .filter(linea => !linea.startsWith("--") && !linea.startsWith("#") && linea.length > 0);
 
-      // Volvemos a unir el script ya sin comentarios molestones
+      // Volvemos a unir el script limpio
       const scriptSinComentarios = lineasLimpias.join(" ");
 
-      // Ahora sí separamos por cada punto y coma (;) de forma segura
+      // Separamos por cada punto y coma (;) de forma segura
       const queries = scriptSinComentarios
         .split(";")
         .map(q => q.trim())
@@ -71,7 +71,6 @@ app.listen(PORT, async () => {
     console.error("Motivo:", err.message);
   }
 });
-
 
 // Libera mesas inactivas (30 min) cada minuto, sin depender de que
 // haya alguna pantalla abierta consultando la API.
