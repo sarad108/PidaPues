@@ -28,28 +28,39 @@ app.use((err, _req, res, _next) => {
   res.status(500).json({ error: "Error interno del servidor." });
 });
 
+// Arrancar el servidor e inyectar el schema automáticamente
 app.listen(PORT, async () => {
   console.log(`PidaPues escuchando en el puerto ${PORT}`);
 
   try {
-    // 1. Probar la conexión básica
+    // 1. Probar la conexión básica con Aiven
     await pool.query("SELECT 1");
     console.log("✅ Conexión a MySQL correcta.");
 
-    // 2. Leer e inyectar el schema.sql automáticamente
+    // 2. Leer e inyectar el archivo schema.sql limpiando comentarios
     const fs = require("fs");
     const schemaPath = path.join(__dirname, "src", "schema.sql");
     
     if (fs.existsSync(schemaPath)) {
       console.log("Leyendo archivo schema.sql para cargar productos...");
-      const sqlScript = fs.readFileSync(schemaPath, "utf8");
+      let sqlScript = fs.readFileSync(schemaPath, "utf8");
       
-      // Separamos el archivo por cada punto y coma (;) para ejecutar consulta por consulta
-      const queries = sqlScript
+      // TRUCO MÁGICO: Eliminar comentarios de una sola línea (-- ...) y líneas vacías
+      const lineas Limpias = sqlScript
+        .split("\n")
+        .map(linea => linea.trim())
+        .filter(linea => !linea.startsWith("--") && !linea.startsWith("#") && linea.length > 0);
+
+      // Volvemos a unir el script ya sin comentarios molestones
+      const scriptSinComentarios = lineasLimpias.join(" ");
+
+      // Ahora sí separamos por cada punto y coma (;) de forma segura
+      const queries = scriptSinComentarios
         .split(";")
         .map(q => q.trim())
         .filter(q => q.length > 0);
 
+      console.log(`Ejecutando ${queries.length} consultas en la base de datos...`);
       for (const query of queries) {
         await pool.query(query);
       }
